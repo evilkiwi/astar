@@ -24,7 +24,7 @@ export default defineConfig({
         sourcemap: process.env.MODE === 'development' ? true : false,
         outDir: 'build',
         assetsDir: '.',
-        minify: false,//process.env.MODE === 'development' ? false : 'terser',
+        minify: process.env.MODE === 'development' ? false : 'terser',
         target: 'chrome91',
         terserOptions: {
             ecma: 2020,

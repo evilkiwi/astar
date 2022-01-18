@@ -9,4 +9,61 @@
     <h3>Synchronous A* pathfinding for TypeScript</h3>
 </div>
 
-TODO:
+`@tnotifier/astar` is an A* pathfinding implementation in TypeScript. That's pretty much it - it's not awfully performant, but it works.
+
+## Installation
+
+This package is available via NPM:
+
+```bash
+yarn add @tnotifier/astar
+
+# or
+
+npm install @tnotifier/astar
+```
+
+## Usage
+
+```typescript
+import type { Grid } from '@tnotifier/astar';
+import { search } from '@tnotifier/astar';
+
+/**
+ * The first step is to have a Grid.
+ *
+ * -1 = un-walkable, like a wall or water.
+ *  0 = walkable
+ */
+const grid: Grid = [
+    [ 0,  0, -1,  0,  0, -1,  0,  0],
+    [ 0,  0, -1,  0,  0, -1,  0,  0],
+    [ 0,  0, -1,  0,  0, -1,  0,  0],
+    [ 0,  0, -1,  0,  0,  0,  0,  0],
+    [ 0,  0, -1,  0,  0, -1,  0,  0],
+    [ 0,  0, -1,  0,  0, -1,  0,  0],
+    [ 0,  0,  0,  0,  0, -1,  0,  0],
+    [ 0,  0, -1,  0,  0, -1,  0,  0],
+];
+
+/**
+ * Once you have a Grid, you can find an efficient tile-based path
+ * from one vector to another.
+ */
+const path = search({
+    grid,
+    from: [0, 0],
+    to: [7, 6],
+    diagonal: true,
+    cutCorners: false,
+});
+
+// Path is either an array of vectors or null (could not find a path)
+console.log(path);
+```
+
+The library is immutable/side-effect free, and the grid reference won't be changed when search.
+
+## To-do
+
+- Add elevation support

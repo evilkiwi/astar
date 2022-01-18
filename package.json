@@ -1,6 +1,6 @@
 {
     "name": "@tnotifier/astar",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Synchronous A* pathfinding for TypeScript",
     "files": ["build"],
     "sideEffects": false,
