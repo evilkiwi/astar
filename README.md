@@ -1,33 +1,33 @@
 <div align="center">
-    <a href="https://www.npmjs.com/package/@tnotifier/astar" target="_blank">
-        <img src="https://img.shields.io/npm/v/@tnotifier/astar?style=flat-square" alt="NPM" />
+    <a href="https://www.npmjs.com/package/@evilkiwi/astar" target="_blank">
+        <img src="https://img.shields.io/npm/v/@evilkiwi/astar?style=flat-square" alt="NPM" />
     </a>
     <a href="https://discord.gg/XMrHXtN" target="_blank">
         <img src="https://img.shields.io/discord/123906549860139008?color=7289DA&label=discord&logo=discord&logoColor=FFFFFF&style=flat-square" alt="Discord" />
     </a>
-    <img src="https://img.shields.io/npm/l/@tnotifier/astar?style=flat-square" alt="Apache-2.0" />
+    <img src="https://img.shields.io/npm/l/@evilkiwi/astar?style=flat-square" alt="Apache-2.0" />
     <h3>Synchronous A* pathfinding for TypeScript</h3>
 </div>
 
-`@tnotifier/astar` is an A* pathfinding implementation in TypeScript. That's pretty much it - it's not awfully performant, but it works.
+`@evilkiwi/astar` is an A* pathfinding implementation in TypeScript. That's pretty much it - it's not awfully performant, but it works.
 
 ## Installation
 
 This package is available via NPM:
 
 ```bash
-yarn add @tnotifier/astar
+yarn add @evilkiwi/astar
 
 # or
 
-npm install @tnotifier/astar
+npm install @evilkiwi/astar
 ```
 
 ## Usage
 
 ```typescript
-import type { Grid } from '@tnotifier/astar';
-import { search } from '@tnotifier/astar';
+import type { Grid } from '@evilkiwi/astar';
+import { search } from '@evilkiwi/astar';
 
 /**
  * The first step is to have a Grid.

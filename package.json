@@ -1,5 +1,5 @@
 {
-    "name": "@tnotifier/astar",
+    "name": "@evilkiwi/astar",
     "version": "1.0.2",
     "description": "Synchronous A* pathfinding for TypeScript",
     "files": [
@@ -12,16 +12,16 @@
     "license": "GPL-3.0-only",
     "author": {
         "name": "Evil Kiwi Limited",
-        "url": "https://tnotifier.app",
-        "email": "support@tnotifier.app"
+        "url": "https://evil.kiwi",
+        "email": "support@evil.kiwi"
     },
-    "homepage": "https://github.com/tnotifier/astar",
+    "homepage": "https://github.com/evilkiwi/astar",
     "bugs": {
-        "url": "https://github.com/tnotifier/astar/issues"
+        "url": "https://github.com/evilkiwi/astar/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/tnotifier/astar.git"
+        "url": "git+https://github.com/evilkiwi/astar.git"
     },
     "keywords": [
         "a",
