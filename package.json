@@ -1,27 +1,27 @@
 {
-    "name": "@evilkiwi/astar",
-    "version": "1.0.2",
+    "name": "@oyed/astar",
+    "version": "1.0.3",
     "description": "Synchronous A* pathfinding for TypeScript",
     "files": [
         "build"
     ],
     "sideEffects": false,
-    "main": "./build/index.cjs.js",
-    "module": "./build/index.es.js",
-    "types": "./build/src/index.d.ts",
+    "main": "./build/index.js",
+    "module": "./build/index.mjs",
+    "types": "./build/index.d.ts",
     "license": "GPL-3.0-only",
     "author": {
-        "name": "Evil Kiwi Limited",
-        "url": "https://evil.kiwi",
-        "email": "support@evil.kiwi"
+        "name": "OYED",
+        "url": "https://oyed.dev",
+        "email": "support@oyed.dev"
     },
-    "homepage": "https://github.com/evilkiwi/astar",
+    "homepage": "https://github.com/oyed/astar",
     "bugs": {
-        "url": "https://github.com/evilkiwi/astar/issues"
+        "url": "https://github.com/oyed/astar/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/evilkiwi/astar.git"
+        "url": "git+https://github.com/oyed/astar.git"
     },
     "keywords": [
         "a",
@@ -39,9 +39,10 @@
     },
     "devDependencies": {
         "rimraf": "^3.0.2",
-        "tslib": "^2.3.1",
-        "typescript": "^4.5.5",
-        "vite": "^2.8.0",
-        "vite-plugin-dts": "^0.9.9"
+        "terser": "^5.15.0",
+        "tslib": "^2.4.0",
+        "typescript": "^4.8.3",
+        "vite": "^3.1.3",
+        "vite-plugin-dts": "^1.5.0"
     }
 }

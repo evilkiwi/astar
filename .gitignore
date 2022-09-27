@@ -106,5 +106,8 @@ sw.*
 !.yarn/versions
 .pnp.*
 
-# Library
+# Turborepo
+.turbo
+
+# Build output
 /build
