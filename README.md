@@ -5,7 +5,7 @@
     <a href="https://discord.gg/3S6AKZ2GR9" target="_blank">
         <img src="https://img.shields.io/discord/1000565079789535324?color=7289DA&label=discord&logo=discord&logoColor=FFFFFF&style=flat-square" alt="Discord" />
     </a>
-    <img src="https://img.shields.io/npm/l/@oyed/astar?style=flat-square" alt="Apache-2.0" />
+    <img src="https://img.shields.io/npm/l/@oyed/astar?style=flat-square" alt="GPL-3.0-only" />
     <h3>Synchronous A* pathfinding for TypeScript</h3>
 </div>
 
