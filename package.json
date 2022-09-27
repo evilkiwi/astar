@@ -32,8 +32,8 @@
     ],
     "scripts": {
         "clean": "rimraf build",
-        "prepack": "yarn build",
-        "build": "yarn clean && yarn compile",
+        "prepack": "pnpm run build",
+        "build": "pnpm run clean && pnpm run compile",
         "compile": "vite build",
         "dev": "vite build --watch"
     },
