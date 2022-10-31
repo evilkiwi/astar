@@ -9,7 +9,14 @@
     <h3>Synchronous A* pathfinding for TypeScript</h3>
 </div>
 
-`@oyed/astar` is an A* pathfinding implementation in TypeScript. That's pretty much it - it's not awfully performant, but it works.
+`@oyed/astar` is an synchronous A* pathfinding implementation in TypeScript.
+
+- Supports diagonal or manhattan heuristics
+- Optionally supports 3-dimensional grids with elevation
+- Highly configurable (corner cutting, diagonal movement, etc.)
+- First-class TypeScript
+- Fully tested
+- It's not awfully performant, but it works!
 
 ## Installation
 
@@ -33,14 +40,14 @@ import { search } from '@oyed/astar';
  * The first step is to have a Grid.
  *
  * -1 = un-walkable, like a wall or water.
- *  0 = walkable
+ *  0 = walkable, optionally any integer above 0 for elevation support
  */
 const grid: Grid = [
-    [ 0,  0, -1,  0,  0, -1,  0,  0],
-    [ 0,  0, -1,  0,  0, -1,  0,  0],
-    [ 0,  0, -1,  0,  0, -1,  0,  0],
-    [ 0,  0, -1,  0,  0,  0,  0,  0],
-    [ 0,  0, -1,  0,  0, -1,  0,  0],
+    [ 0,  5, -1,  0,  0, -1,  0,  0],
+    [ 0,  4, -1,  0,  0, -1,  0,  0],
+    [ 0,  3, -1,  0,  0, -1,  0,  0],
+    [ 0,  2, -1,  0,  0,  0,  0,  0],
+    [ 0,  1, -1,  0,  0, -1,  0,  0],
     [ 0,  0, -1,  0,  0, -1,  0,  0],
     [ 0,  0,  0,  0,  0, -1,  0,  0],
     [ 0,  0, -1,  0,  0, -1,  0,  0],
@@ -51,11 +58,11 @@ const grid: Grid = [
  * from one vector to another.
  */
 const path = search({
-    grid,
+    cutCorners: false,
+    diagonal: true,
     from: [0, 0],
     to: [7, 6],
-    diagonal: true,
-    cutCorners: false,
+    grid,
 });
 
 // Path is either an array of vectors or null (could not find a path)
@@ -63,7 +70,3 @@ console.log(path);
 ```
 
 The library is immutable/side-effect free, and the grid reference won't be changed when search.
-
-## To-do
-
-- Add elevation support

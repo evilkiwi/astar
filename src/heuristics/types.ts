@@ -1,3 +1,3 @@
-import type { Vector2D } from '@/types';
+import type { Vector } from '@/types';
 
-export type Heuristic = (from: Vector2D, to: Vector2D) => number;
+export type Heuristic = (from: Vector, to: Vector) => number;

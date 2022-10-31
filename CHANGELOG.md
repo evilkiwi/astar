@@ -1,3 +1,11 @@
+# 2.0.0 (2022-10-31)
+
+- Renamed `Vector2D` to `Vector`
+- Added additional error management
+- Added support for elevation
+- Updated dependencies
+- Added tests
+
 # 1.0.3 (2022-09-27)
 
 - Moved to OYED `@oyed/astar`

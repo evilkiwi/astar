@@ -21,7 +21,7 @@ the `#oss-support` channel.
 
 ## I've found an issue with the library/software
 
-In this case, feel free to open a [Bug Report](https://github.com/evilkiwi/astar/issues/new) and fully explain
+In this case, feel free to open a [Bug Report](https://github.com/oyed/astar/issues/new) and fully explain
 the Issue to me. If you don't explain in enough detail, it makes it much harder to diagnose.
 
 Ideally I'd love a minimal set-up that reproduces the issue as well, but it isn't required.

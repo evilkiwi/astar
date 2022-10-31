@@ -1,35 +1,55 @@
 import * as heuristics from '@/heuristics';
-import type { Neighbor, OpenTile, Score, ScoreOptions, SearchOptions, Vector2D } from './types';
+import type { Neighbor, OpenTile, Score, ScoreOptions, SearchOptions, Vector } from './types';
 
 export const search = (options: SearchOptions) => {
     const heuristic = options.heuristic ?? 'diagonal';
     const cutCorners = options.cutCorners ?? true;
+    const stepHeight = options.stepHeight ?? 1;
     const diagonal = options.diagonal ?? false;
 
     // Store the found path and open/closed lists.
-    let path: Vector2D[]|null = null;
-    const end = vectorId(options.to);
     const closed: string[] = [vectorId(options.from)];
+    const end = vectorId(options.to);
+    let path: Vector[]|null = null;
     let open: OpenTile[] = [];
 
     // Calculate grid limits.
+    if (!Array.isArray(options.grid)) {
+        throw new Error('non-array grid provided');
+    } else if (!options.grid.length || !Array.isArray(options.grid[0])) {
+        throw new Error('2 dimensional grid array required');
+    }
+
     const maxX = options.grid[0].length;
     const maxY = options.grid.length;
 
     // Helper function to determine legality of a Vector.
-    const canUse = (cell: Neighbor) => {
-        return !isSolid(cell[0]) && closed.indexOf(vectorId(cell[0])) === -1 && (
-            cell[1] === null || cutCorners || (!isSolid(cell[1][0]) && !isSolid(cell[1][1]))
+    const canUse = (cell: Neighbor, origin: Vector) => {
+        return (
+            // Make sure this tile is walkable.
+            !isWalkable(cell[0], origin) &&
+            // Don't use closed cells.
+            closed.indexOf(vectorId(cell[0])) === -1 &&
+            // Check for cutting corners, if enabled.
+            (
+                cell[1] === null || cutCorners ||
+                (!isWalkable(cell[1][0], origin) && !isWalkable(cell[1][1], origin))
+            )
         );
     };
 
     // Helper function to determine if the given Vector is walkable.
-    const isSolid = (vector: Vector2D) => {
-        // Make sure it is within the grid.
-        return vector[0] < 0 || vector[1] < 0 ||
-            vector[0] >= maxX || vector[1] >= maxY ||
+    const isWalkable = (cell: Vector, origin: Vector) => {
+        return (
+            // Make sure it is within the grid.
+            cell[0] < 0 || cell[1] < 0 ||
+            cell[0] >= maxX || cell[1] >= maxY ||
             // Make sure it isn't un-walkable.
-            options.grid[vector[1]][vector[0]] === -1;
+            options.grid[cell[1]][cell[0]] === -1 ||
+            // Make sure the elevation difference is allowed.
+            options.grid[cell[1]][cell[0]] - options.grid[origin[1]][origin[0]] > stepHeight ||
+            options.grid[cell[1]][cell[0]] - options.grid[origin[1]][origin[0]] < -stepHeight
+        );
     };
 
     // Calculates the neighbors and their scores.
@@ -41,7 +61,7 @@ export const search = (options: SearchOptions) => {
             const name = vectorId(neighbor[0]);
 
             // If the tile is usable, push it to the list.
-            if (canUse(neighbor)) {
+            if (canUse(neighbor, from[0])) {
                 const existing = open.find(item => vectorId(item[0]) === name);
                 const currentScore = score({
                     current: neighbor[0],
@@ -106,7 +126,7 @@ export const search = (options: SearchOptions) => {
 };
 
 const calculatePath = (result: OpenTile) => {
-    const path: Vector2D[] = [];
+    const path: Vector[] = [];
     let current: OpenTile|null = result;
 
     while (current !== null) {
@@ -119,7 +139,7 @@ const calculatePath = (result: OpenTile) => {
     return path;
 };
 
-const neighbors = (vector: Vector2D, diagonals = false) => {
+const neighbors = (vector: Vector, diagonals = false) => {
     const tiles: Neighbor[] = [];
 
     tiles.push([[vector[0] - 1, vector[1]], null]);
@@ -168,7 +188,7 @@ const score = (options: ScoreOptions) => {
     return { g, h, f: g + h } as Score;
 };
 
-const vectorId = (vector: Vector2D) => `${vector[0]},${vector[1]}`;
+const vectorId = (vector: Vector) => `${vector[0]},${vector[1]}`;
 
 export const asc = (a: number, b: number) => {
     if (a > b) {
