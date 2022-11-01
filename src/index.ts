@@ -23,32 +23,43 @@ export const search = (options: SearchOptions) => {
     const maxX = options.grid[0].length;
     const maxY = options.grid.length;
 
+    // Helper function to find the elevation of a Vector (value from the grid).
+    const e = (vector: Vector) => options.grid[vector[1]][vector[0]];
+
     // Helper function to determine legality of a Vector.
-    const canUse = (cell: Neighbor, origin: Vector) => {
+    const canUse = ([cell, neighbors]: Neighbor, origin: Vector) => {
         return (
             // Make sure this tile is walkable.
-            !isWalkable(cell[0], origin) &&
+            !isIllegal(cell, origin) &&
             // Don't use closed cells.
-            closed.indexOf(vectorId(cell[0])) === -1 &&
-            // Check for cutting corners, if enabled.
+            closed.indexOf(vectorId(cell)) === -1 &&
+            // Check the neighboring cells, if diagonal movement.
             (
-                cell[1] === null || cutCorners ||
-                (!isWalkable(cell[1][0], origin) && !isWalkable(cell[1][1], origin))
+                // There are no neighbors to check.
+                neighbors === null ||
+                // If we can cut corners, otherwise if the corners are legal.
+                (
+                    cutCorners ||
+                    (
+                        !isIllegal(neighbors[0], origin, 0) &&
+                        !isIllegal(neighbors[1], origin, 0)
+                    )
+                )
             )
         );
     };
 
     // Helper function to determine if the given Vector is walkable.
-    const isWalkable = (cell: Vector, origin: Vector) => {
+    const isIllegal = (cell: Vector, origin: Vector, step = stepHeight) => {
         return (
             // Make sure it is within the grid.
             cell[0] < 0 || cell[1] < 0 ||
             cell[0] >= maxX || cell[1] >= maxY ||
             // Make sure it isn't un-walkable.
-            options.grid[cell[1]][cell[0]] === -1 ||
+            e(cell) === -1 ||
             // Make sure the elevation difference is allowed.
-            options.grid[cell[1]][cell[0]] - options.grid[origin[1]][origin[0]] > stepHeight ||
-            options.grid[cell[1]][cell[0]] - options.grid[origin[1]][origin[0]] < -stepHeight
+            e(cell) - e(origin) > step ||
+            e(cell) - e(origin) < -step
         );
     };
 

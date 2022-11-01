@@ -146,6 +146,20 @@ test.concurrent('should allow differing step heights in elevation', () => {
     ]);
 });
 
+test.concurrent('should not cut corners over elevated tiles', () => {
+    const path = search({
+        cutCorners: false,
+        diagonal: true,
+        from: [1, 0],
+        to: [0, 3],
+        grid,
+    });
+
+    expect(path).toStrictEqual([
+        [1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [0, 4], [0, 3],
+    ]);
+});
+
 test.concurrent('should produce similar results with manhattan heuristic', () => {
     const path = search({
         heuristic: 'manhattan',

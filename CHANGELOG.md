@@ -1,3 +1,8 @@
+# 2.0.1 (2022-10-31)
+
+- Fix cutting corners on elevated tiles
+- Improve readability when figuring out tile elevation from grid reference
+
 # 2.0.0 (2022-10-31)
 
 - Renamed `Vector2D` to `Vector`
