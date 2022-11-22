@@ -1,3 +1,8 @@
+# 2.0.2 (2022-11-22)
+
+- Move back to Evil Kiwi (`@evilkiwi/astar`)
+- Update dependencies
+
 # 2.0.1 (2022-10-31)
 
 - Fix cutting corners on elevated tiles
