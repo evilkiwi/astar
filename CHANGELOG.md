@@ -1,3 +1,8 @@
+# 3.0.0 (2022-12-11)
+
+- Move to being an ES Module
+- Update dependencies
+
 # 2.0.2 (2022-11-22)
 
 - Move back to Evil Kiwi (`@evilkiwi/astar`)

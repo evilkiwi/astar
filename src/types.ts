@@ -4,32 +4,32 @@ export type Grid = number[][];
 export type Vector = [number, number];
 
 export interface Score {
-    g: number;
-    h: number;
-    f: number;
+  g: number;
+  h: number;
+  f: number;
 }
 
 export type OpenTile = [Vector, Score, OpenTile|null];
 
 export interface ScoreOptions {
-    current: Vector;
-    parent: OpenTile;
-    goal: Vector;
-    heuristic: keyof typeof heuristics;
+  current: Vector;
+  parent: OpenTile;
+  goal: Vector;
+  heuristic: keyof typeof heuristics;
 }
 
 export interface SearchOptions {
-    from: Vector;
-    to: Vector;
-    grid: Grid;
-    heuristic?: keyof typeof heuristics;
-    diagonal?: boolean;
-    cutCorners?: boolean;
-    /**
-     * When defing a grid with elevation, this is the max distance
-     * that can be stepped up/doown. Defaults to `1`.
-     */
-    stepHeight?: number;
+  from: Vector;
+  to: Vector;
+  grid: Grid;
+  heuristic?: keyof typeof heuristics;
+  diagonal?: boolean;
+  cutCorners?: boolean;
+  /**
+   * When defing a grid with elevation, this is the max distance
+   * that can be stepped up/doown. Defaults to `1`.
+   */
+  stepHeight?: number;
 }
 
 /**
