@@ -1,3 +1,7 @@
+# 3.0.1 (2022-12-11)
+
+- Fix issue regarding starting tile being "illegal"
+
 # 3.0.0 (2022-12-11)
 
 - Move to being an ES Module

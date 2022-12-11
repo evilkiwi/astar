@@ -18,7 +18,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "es2020",
-    "lib": ["esnext"],
+    "lib": ["esnext", "dom"],
     "paths": {
       "*": ["./src/types/*.d.ts"],
       "@/*": ["./src/*"]

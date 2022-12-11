@@ -57,9 +57,18 @@ export const search = (options: SearchOptions) => {
       cell[0] >= maxX || cell[1] >= maxY ||
       // Make sure it isn't un-walkable.
       e(cell) === -1 ||
-      // Make sure the elevation difference is allowed.
-      e(cell) - e(origin) > step ||
-      e(cell) - e(origin) < -step
+      (
+        // This is either the starting (illegal) tile, or...
+        !(
+          origin[0] === options.from[0] &&
+          origin[1] === options.from[1] &&
+          e(options.from) === -1
+        ) && (
+          // ...make sure the elevation difference is allowed.
+          e(cell) - e(origin) > step ||
+          e(cell) - e(origin) < -step
+        )
+      )
     );
   };
 

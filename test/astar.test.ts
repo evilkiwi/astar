@@ -176,3 +176,20 @@ test.concurrent('should produce similar results with manhattan heuristic', () =>
     [1, 3], [1, 2], [1, 1], [1, 0],
   ]);
 });
+
+test.concurrent('should pathfind if starting point is invalid tile', () => {
+  const testGrid: Grid = [
+    [-1,  5,  5,  -1],
+    [ 5,  5,  5,  -1],
+    [-1, -1, -1,  -1],
+  ];
+  const path = search({
+    grid: testGrid,
+    from: [0, 0],
+    to: [2, 0],
+  });
+
+  expect(path).toStrictEqual([
+    [0, 0], [1, 0], [2, 0],
+  ]);
+});
