@@ -69,4 +69,4 @@ const path = search({
 console.log(path);
 ```
 
-The library is immutable/side-effect free, and the grid reference won't be changed when search.
+The library is immutable/side-effect free, and the grid reference won't be changed when searched.
