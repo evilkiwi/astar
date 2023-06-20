@@ -33,8 +33,7 @@ npm install @evilkiwi/astar
 ## Usage
 
 ```typescript
-import type { Grid } from '@evilkiwi/astar';
-import { search } from '@evilkiwi/astar';
+import { search, type Grid } from '@evilkiwi/astar';
 
 /**
  * The first step is to have a Grid.

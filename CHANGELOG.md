@@ -1,3 +1,8 @@
+# 3.1.0 (2023-06-20)
+
+- Update dependencies
+- Slightly restructure project
+
 # 3.0.1 (2022-12-11)
 
 - Fix issue regarding starting tile being "illegal"

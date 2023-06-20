@@ -1,11 +1,12 @@
-import { nodeExternalsPlugin } from 'esbuild-node-externals';
+import pkg from './package.json' assert { type: 'json' };
+import { builtinModules } from 'module';
 import { build } from 'esbuild';
 
 /** @type {import('esbuild').BuildOptions} */
 const options = {
-  sourcemap: process.env.NODE_ENV === 'development',
-  plugins: [nodeExternalsPlugin()],
-  entryPoints: ['./src/index.ts'],
+  external: [...Object.keys(pkg.devDependencies), ...builtinModules],
+  entryPoints: { index: './src/index.ts' },
+  sourcemap: false,
   logLevel: 'debug',
   platform: 'node',
   target: 'node18',

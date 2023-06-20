@@ -1,4 +1,4 @@
-import type { Heuristic } from '../types';
+import type { Heuristic } from './index';
 
 export const diagonal: Heuristic = (from, to) => {
   const d1 = Math.abs(to[0] - from[0]);

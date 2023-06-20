@@ -1,6 +1,5 @@
 import { expect, test } from 'vitest';
-import type { Grid } from '../src';
-import { search } from '../src';
+import { search, type Grid } from '../src';
 
 const grid: Grid = [
   [ 0,  5, -1,  0,  0, -1,  0,  0],

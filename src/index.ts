@@ -1,7 +1,7 @@
 import * as heuristics from '@/heuristics';
 import type { Neighbor, OpenTile, Score, ScoreOptions, SearchOptions, Vector } from './types';
 
-export const search = (options: SearchOptions) => {
+export function search(options: SearchOptions) {
   const heuristic = options.heuristic ?? 'diagonal';
   const cutCorners = options.cutCorners ?? true;
   const stepHeight = options.stepHeight ?? 1;
@@ -145,7 +145,7 @@ export const search = (options: SearchOptions) => {
   return path;
 };
 
-const calculatePath = (result: OpenTile) => {
+function calculatePath(result: OpenTile) {
   const path: Vector[] = [];
   let current: OpenTile|null = result;
 
@@ -157,9 +157,9 @@ const calculatePath = (result: OpenTile) => {
   path.reverse();
 
   return path;
-};
+}
 
-const neighbors = (vector: Vector, diagonals = false) => {
+function neighbors(vector: Vector, diagonals = false) {
   const tiles: Neighbor[] = [];
 
   tiles.push([[vector[0] - 1, vector[1]], null]);
@@ -199,18 +199,20 @@ const neighbors = (vector: Vector, diagonals = false) => {
   }
 
   return { tiles, total: tiles.length };
-};
+}
 
-const score = (options: ScoreOptions) => {
+function score(options: ScoreOptions) {
   let g = options.parent[1].g + 1;
   let h = heuristics[options.heuristic](options.current, options.goal);
 
   return { g, h, f: g + h } as Score;
-};
+}
 
-const vectorId = (vector: Vector) => `${vector[0]},${vector[1]}`;
+function vectorId(vector: Vector) {
+  return `${vector[0]},${vector[1]}`;
+}
 
-export const asc = (a: number, b: number) => {
+export function asc(a: number, b: number) {
   if (a > b) {
     return 1;
   } else if (a < b) {
@@ -218,6 +220,6 @@ export const asc = (a: number, b: number) => {
   }
 
   return 0;
-};
+}
 
 export * from './types';
