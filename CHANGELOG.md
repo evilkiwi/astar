@@ -1,3 +1,9 @@
+# 3.2.0 (2023-08-01)
+
+- Update dependencies
+- Added ability to specify Tiles as an Object to allow for future changes
+- Added `validAsDestination` to allow Tiles to be marked illegal, but still be used as a destination
+
 # 3.1.0 (2023-06-20)
 
 - Update dependencies

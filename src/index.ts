@@ -1,5 +1,5 @@
 import * as heuristics from '@/heuristics';
-import type { Neighbor, OpenTile, Score, ScoreOptions, SearchOptions, Vector } from './types';
+import type { Neighbor, OpenTile, Score, ScoreOptions, SearchOptions, TileBuilderCache, Vector } from './types';
 
 export function search(options: SearchOptions) {
   const heuristic = options.heuristic ?? 'diagonal';
@@ -8,9 +8,9 @@ export function search(options: SearchOptions) {
   const diagonal = options.diagonal ?? false;
 
   // Store the found path and open/closed lists.
-  const closed: string[] = [vectorId(options.from)];
+  const closed: string[] = [ vectorId(options.from) ];
   const end = vectorId(options.to);
-  let path: Vector[]|null = null;
+  let path: Vector[] | null = null;
   let open: OpenTile[] = [];
 
   // Calculate grid limits.
@@ -23,11 +23,38 @@ export function search(options: SearchOptions) {
   const maxX = options.grid[0].length;
   const maxY = options.grid.length;
 
-  // Helper function to find the elevation of a Vector (value from the grid).
-  const e = (vector: Vector) => options.grid[vector[1]][vector[0]];
+  // Helper function to determine the make-up of a Tile object, cached in-memory.
+  const tileCache: Record<string, TileBuilderCache> = {};
+
+  function tile(vector: Vector): TileBuilderCache {
+    const id = vectorId(vector);
+
+    if (tileCache[id]) {
+      return tileCache[id];
+    }
+
+    const rawValue = options.grid[vector[1]][vector[0]];
+    let value: TileBuilderCache;
+
+    if (typeof rawValue === 'number') {
+      value = {
+        elevation: Math.max(0, rawValue),
+        isLegal: rawValue !== -1,
+      };
+    } else {
+      value = {
+        ...rawValue,
+        isLegal: rawValue.isLegal ?? rawValue.elevation !== -1,
+      };
+    }
+
+    tileCache[id] = value;
+
+    return value;
+  }
 
   // Helper function to determine legality of a Vector.
-  const canUse = ([cell, neighbors]: Neighbor, origin: Vector) => {
+  function canUse([ cell, neighbors ]: Neighbor, origin: Vector) {
     return (
       // Make sure this tile is walkable.
       !isIllegal(cell, origin) &&
@@ -47,33 +74,44 @@ export function search(options: SearchOptions) {
         )
       )
     );
-  };
+  }
 
   // Helper function to determine if the given Vector is walkable.
-  const isIllegal = (cell: Vector, origin: Vector, step = stepHeight) => {
+  function isIllegal(cell: Vector, origin: Vector, step = stepHeight) {
     return (
       // Make sure it is within the grid.
       cell[0] < 0 || cell[1] < 0 ||
       cell[0] >= maxX || cell[1] >= maxY ||
       // Make sure it isn't un-walkable.
-      e(cell) === -1 ||
+      (
+        // First, check the elevation is allowed/whether it is marked as legal.
+        !tile(cell).isLegal &&
+        // If this is an illegal tile, make sure it's not detination if that's allowed.
+        (
+          tile(cell).validAsDestination !== true ||
+          (
+            cell[0] !== options.to[0] ||
+            cell[1] !== options.to[1]
+          )
+        )
+      ) ||
       (
         // This is either the starting (illegal) tile, or...
         !(
           origin[0] === options.from[0] &&
           origin[1] === options.from[1] &&
-          e(options.from) === -1
+          !tile(options.from).isLegal
         ) && (
           // ...make sure the elevation difference is allowed.
-          e(cell) - e(origin) > step ||
-          e(cell) - e(origin) < -step
+          tile(cell).elevation - tile(origin).elevation > step ||
+          tile(cell).elevation - tile(origin).elevation < -step
         )
       )
     );
-  };
+  }
 
   // Calculates the neighbors and their scores.
-  const traverse = (from: OpenTile) => {
+  function traverse(from: OpenTile) {
     const { tiles, total } = neighbors(from[0], diagonal);
 
     for (let i = 0; i < total; i++) {
@@ -110,7 +148,7 @@ export function search(options: SearchOptions) {
 
     // Sort the new open list by F values.
     open = open.sort((a, b) => asc(a[1].f, b[1].f));
-  };
+  }
 
   // And start traversing from the starting position.
   traverse([options.from, {
@@ -143,11 +181,11 @@ export function search(options: SearchOptions) {
   }
 
   return path;
-};
+}
 
-function calculatePath(result: OpenTile) {
+export function calculatePath(result: OpenTile) {
+  let current: OpenTile | null = result;
   const path: Vector[] = [];
-  let current: OpenTile|null = result;
 
   while (current !== null) {
     path.push(current[0]);
@@ -159,41 +197,41 @@ function calculatePath(result: OpenTile) {
   return path;
 }
 
-function neighbors(vector: Vector, diagonals = false) {
+export function neighbors(vector: Vector, diagonals = false) {
   const tiles: Neighbor[] = [];
 
-  tiles.push([[vector[0] - 1, vector[1]], null]);
-  tiles.push([[vector[0] + 1, vector[1]], null]);
-  tiles.push([[vector[0], vector[1] - 1], null]);
-  tiles.push([[vector[0], vector[1] + 1], null]);
+  tiles.push([ [ vector[0] - 1, vector[1] ], null ]);
+  tiles.push([ [ vector[0] + 1, vector[1] ], null ]);
+  tiles.push([ [ vector[0], vector[1] - 1 ], null ]);
+  tiles.push([ [ vector[0], vector[1] + 1 ], null ]);
 
   if (diagonals) {
     tiles.push([
-      [vector[0] - 1, vector[1] - 1],
+      [ vector[0] - 1, vector[1] - 1 ],
       [
-        [vector[0], vector[1] - 1],
-        [vector[0] - 1, vector[1]],
+        [ vector[0], vector[1] - 1 ],
+        [ vector[0] - 1, vector[1] ],
       ],
     ]);
     tiles.push([
-      [vector[0] + 1, vector[1] + 1],
+      [ vector[0] + 1, vector[1] + 1],
       [
-        [vector[0], vector[1] + 1],
-        [vector[0] + 1, vector[1]],
+        [ vector[0], vector[1] + 1 ],
+        [ vector[0] + 1, vector[1] ],
       ],
     ]);
     tiles.push([
-      [vector[0] + 1, vector[1] - 1],
+      [ vector[0] + 1, vector[1] - 1 ],
       [
-        [vector[0], vector[1] - 1],
-        [vector[0] + 1, vector[1]],
+        [ vector[0], vector[1] - 1 ],
+        [ vector[0] + 1, vector[1] ],
       ],
     ]);
     tiles.push([
-      [vector[0] - 1, vector[1] + 1],
+      [ vector[0] - 1, vector[1] + 1 ],
       [
-        [vector[0], vector[1] + 1],
-        [vector[0] - 1, vector[1]],
+        [ vector[0], vector[1] + 1 ],
+        [ vector[0] - 1, vector[1] ],
       ],
     ]);
   }
@@ -201,14 +239,14 @@ function neighbors(vector: Vector, diagonals = false) {
   return { tiles, total: tiles.length };
 }
 
-function score(options: ScoreOptions) {
+export function score(options: ScoreOptions) {
   let g = options.parent[1].g + 1;
   let h = heuristics[options.heuristic](options.current, options.goal);
 
   return { g, h, f: g + h } as Score;
 }
 
-function vectorId(vector: Vector) {
+export function vectorId(vector: Vector) {
   return `${vector[0]},${vector[1]}`;
 }
 

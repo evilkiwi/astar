@@ -2,14 +2,14 @@ import { expect, test } from 'vitest';
 import { search, type Grid } from '../src';
 
 const grid: Grid = [
-  [ 0,  5, -1,  0,  0, -1,  0,  0],
+  [ 0,  { elevation: 5 }, -1,  0,  0, -1,  0,  0],
   [ 0,  4, -1,  0,  0, -1,  0,  0],
   [ 0,  3, -1,  0,  0, -1,  0,  0],
   [ 0,  2, -1,  0,  0,  0,  0,  0],
-  [ 0,  1, -1,  0,  0, -1,  0,  0],
+  [ 0,  1, -1,  { elevation: 0 },  0, -1,  0,  0],
   [ 0,  0, -1,  0,  0, -1,  0,  0],
   [ 0,  0,  0,  0,  0, -1,  0,  0],
-  [ 0,  0, -1,  0,  0, -1,  0,  0],
+  [ 0,  0, -1,  0,  0, { elevation: 0, isLegal: false, validAsDestination: true },  0,  0],
 ];
 
 test.concurrent('should enforce array grid input', () => {
@@ -190,5 +190,33 @@ test.concurrent('should pathfind if starting point is invalid tile', () => {
 
   expect(path).toStrictEqual([
     [0, 0], [1, 0], [2, 0],
+  ]);
+});
+
+test.concurrent('should fail to pathfind when destination is illegal and invalid', () => {
+  const path = search({
+    cutCorners: false,
+    diagonal: false,
+    from: [4, 7],
+    to: [6, 7],
+    grid,
+  });
+
+  expect(path).toStrictEqual([
+    [4, 7], [4, 6], [4, 5], [4, 4], [4, 3], [5, 3], [6, 3], [6, 4], [6, 5], [6, 6], [6, 7],
+  ]);
+});
+
+test.concurrent('should allow pathfinding to illegal tile if valid as destination', () => {
+  const path = search({
+    cutCorners: false,
+    diagonal: false,
+    from: [4, 7],
+    to: [5, 7],
+    grid,
+  });
+
+  expect(path).toStrictEqual([
+    [4, 7], [5, 7],
   ]);
 });
