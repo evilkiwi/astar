@@ -100,7 +100,8 @@ export function search(options: SearchOptions) {
         !(
           origin[0] === options.from[0] &&
           origin[1] === options.from[1] &&
-          !tile(options.from).isLegal
+          !tile(options.from).isLegal &&
+          !tile(options.from).validAsDestination
         ) && (
           // ...make sure the elevation difference is allowed.
           tile(cell).elevation - tile(origin).elevation > step ||

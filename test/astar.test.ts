@@ -8,8 +8,8 @@ const grid: Grid = [
   [ 0,  2, -1,  0,  0,  0,  0,  0],
   [ 0,  1, -1,  { elevation: 0 },  0, -1,  0,  0],
   [ 0,  0, -1,  0,  0, -1,  0,  0],
-  [ 0,  0,  0,  0,  0, -1,  0,  0],
-  [ 0,  0, -1,  0,  0, { elevation: 0, isLegal: false, validAsDestination: true },  0,  0],
+  [ 0,  0,  0,  0,  0, -1,  0,  { elevation: 0, isLegal: false, validAsDestination: true }],
+  [ 0,  0, -1,  0,  0, { elevation: 0, isLegal: false, validAsDestination: true },  0,  2],
 ];
 
 test.concurrent('should enforce array grid input', () => {
@@ -191,6 +191,18 @@ test.concurrent('should pathfind if starting point is invalid tile', () => {
   expect(path).toStrictEqual([
     [0, 0], [1, 0], [2, 0],
   ]);
+});
+
+test.concurrent('should not allow moving from illegal destination tile to larger than step elevation (lol)', () => {
+  const path = search({
+    cutCorners: false,
+    diagonal: false,
+    from: [7, 6],
+    to: [7, 7],
+    grid,
+  });
+
+  expect(path).toStrictEqual(null);
 });
 
 test.concurrent('should fail to pathfind when destination is illegal and invalid', () => {

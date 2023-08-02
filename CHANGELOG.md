@@ -1,3 +1,7 @@
+# 3.2.1 (2023-08-02)
+
+- Fix issue with `validAsDestination` allowing origin tile to step up/down any elevation
+
 # 3.2.0 (2023-08-01)
 
 - Update dependencies
