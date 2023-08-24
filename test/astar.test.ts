@@ -2,10 +2,10 @@ import { expect, test } from 'vitest';
 import { search, type Grid } from '../src';
 
 const grid: Grid = [
-  [ 0,  { elevation: 5 }, -1,  0,  0, -1,  0,  0],
+  [ 0,  { elevation: 5 }, -1,  0,  0, -1,  0, { elevation: 2, isLegal: false, validAsDestination: true }],
   [ 0,  4, -1,  0,  0, -1,  0,  0],
-  [ 0,  3, -1,  0,  0, -1,  0,  0],
-  [ 0,  2, -1,  0,  0,  0,  0,  0],
+  [ 0,  3, -1,  0,  0, -1,  0, { elevation: 2, isLegal: false, validAsDestination: true }],
+  [ 0,  2, -1,  0,  0,  0,  0,  1],
   [ 0,  1, -1,  { elevation: 0 },  0, -1,  0,  0],
   [ 0,  0, -1,  0,  0, -1,  0,  0],
   [ 0,  0,  0,  0,  0, -1,  0,  { elevation: 0, isLegal: false, validAsDestination: true }],
@@ -231,4 +231,30 @@ test.concurrent('should allow pathfinding to illegal tile if valid as destinatio
   expect(path).toStrictEqual([
     [4, 7], [5, 7],
   ]);
+});
+
+test.concurrent('should allow pathfinding to illegal tile if valid as destination and correctly go over pathing', () => {
+  const path = search({
+    cutCorners: false,
+    diagonal: false,
+    from: [6, 2],
+    to: [7, 2],
+    grid,
+  });
+
+  expect(path).toStrictEqual([
+    [6, 2], [6, 3], [7, 3], [7, 2]
+  ]);
+});
+
+test.concurrent('should not pathfind to illegal tile that is valid as a destination but above step limit', () => {
+  const path = search({
+    cutCorners: false,
+    diagonal: false,
+    from: [7, 1],
+    to: [7, 0],
+    grid,
+  });
+
+  expect(path).toStrictEqual(null);
 });
