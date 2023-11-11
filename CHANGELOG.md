@@ -1,3 +1,8 @@
+# 3.3.0 (2023-11-11)
+
+- Add more test case coverage
+- Update dependencies
+
 # 3.2.2 (2023-08-24)
 
 - Add more test case coverage
