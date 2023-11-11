@@ -1,6 +1,9 @@
+# 3.3.1 (2023-11-11)
+
+- Added somecode formatting bits
+
 # 3.3.0 (2023-11-11)
 
-- Add more test case coverage
 - Update dependencies
 
 # 3.2.2 (2023-08-24)

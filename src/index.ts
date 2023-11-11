@@ -1,4 +1,5 @@
 import * as heuristics from '@/heuristics';
+
 import type { Neighbor, OpenTile, Score, ScoreOptions, SearchOptions, TileBuilderCache, Vector } from './types';
 
 export function search(options: SearchOptions) {
@@ -8,7 +9,7 @@ export function search(options: SearchOptions) {
   const diagonal = options.diagonal ?? false;
 
   // Store the found path and open/closed lists.
-  const closed: string[] = [ vectorId(options.from) ];
+  const closed: string[] = [vectorId(options.from)];
   const end = vectorId(options.to);
   let path: Vector[] | null = null;
   let open: OpenTile[] = [];
@@ -54,25 +55,18 @@ export function search(options: SearchOptions) {
   }
 
   // Helper function to determine legality of a Vector.
-  function canUse([ cell, neighbors ]: Neighbor, origin: Vector) {
+  function canUse([cell, neighbors]: Neighbor, origin: Vector) {
     return (
       // Make sure this tile is walkable.
       !isIllegal(cell, origin) &&
       // Don't use closed cells.
       closed.indexOf(vectorId(cell)) === -1 &&
       // Check the neighboring cells, if diagonal movement.
-      (
-        // There are no neighbors to check.
-        neighbors === null ||
+      // There are no neighbors to check.
+      (neighbors === null ||
         // If we can cut corners, otherwise if the corners are legal.
-        (
-          cutCorners ||
-          (
-            !isIllegal(neighbors[0], origin, 0) &&
-            !isIllegal(neighbors[1], origin, 0)
-          )
-        )
-      )
+        cutCorners ||
+        (!isIllegal(neighbors[0], origin, 0) && !isIllegal(neighbors[1], origin, 0)))
     );
   }
 
@@ -80,34 +74,24 @@ export function search(options: SearchOptions) {
   function isIllegal(cell: Vector, origin: Vector, step = stepHeight) {
     return (
       // Make sure it is within the grid.
-      cell[0] < 0 || cell[1] < 0 ||
-      cell[0] >= maxX || cell[1] >= maxY ||
+      cell[0] < 0 ||
+      cell[1] < 0 ||
+      cell[0] >= maxX ||
+      cell[1] >= maxY ||
       // Make sure it isn't un-walkable.
-      (
-        // First, check the elevation is allowed/whether it is marked as legal.
-        !tile(cell).isLegal &&
+      // First, check the elevation is allowed/whether it is marked as legal.
+      (!tile(cell).isLegal &&
         // If this is an illegal tile, make sure it's not detination if that's allowed.
-        (
-          tile(cell).validAsDestination !== true ||
-          (
-            cell[0] !== options.to[0] ||
-            cell[1] !== options.to[1]
-          )
-        )
-      ) ||
-      (
-        // This is either the starting (illegal) tile, or...
-        !(
-          origin[0] === options.from[0] &&
-          origin[1] === options.from[1] &&
-          !tile(options.from).isLegal &&
-          !tile(options.from).validAsDestination
-        ) && (
-          // ...make sure the elevation difference is allowed.
-          tile(cell).elevation - tile(origin).elevation > step ||
-          tile(cell).elevation - tile(origin).elevation < -step
-        )
-      )
+        (tile(cell).validAsDestination !== true || cell[0] !== options.to[0] || cell[1] !== options.to[1])) ||
+      // This is either the starting (illegal) tile, or...
+      (!(
+        origin[0] === options.from[0] &&
+        origin[1] === options.from[1] &&
+        !tile(options.from).isLegal &&
+        !tile(options.from).validAsDestination
+      ) &&
+        // ...make sure the elevation difference is allowed.
+        (tile(cell).elevation - tile(origin).elevation > step || tile(cell).elevation - tile(origin).elevation < -step))
     );
   }
 
@@ -152,18 +136,22 @@ export function search(options: SearchOptions) {
   }
 
   // And start traversing from the starting position.
-  traverse([options.from, {
-    g: 0,
-    h: 0,
-    f: 0,
-  }, null]);
+  traverse([
+    options.from,
+    {
+      g: 0,
+      h: 0,
+      f: 0,
+    },
+    null,
+  ]);
 
   // Traverse the open list until it is empty.
   while (open.length > 0) {
     const bestScore = open.shift();
 
     if (bestScore) {
-      const [ vector ] = bestScore;
+      const [vector] = bestScore;
       const name = vectorId(vector);
 
       // Add this to the closed list.
@@ -201,38 +189,38 @@ export function calculatePath(result: OpenTile) {
 export function neighbors(vector: Vector, diagonals = false) {
   const tiles: Neighbor[] = [];
 
-  tiles.push([ [ vector[0] - 1, vector[1] ], null ]);
-  tiles.push([ [ vector[0] + 1, vector[1] ], null ]);
-  tiles.push([ [ vector[0], vector[1] - 1 ], null ]);
-  tiles.push([ [ vector[0], vector[1] + 1 ], null ]);
+  tiles.push([[vector[0] - 1, vector[1]], null]);
+  tiles.push([[vector[0] + 1, vector[1]], null]);
+  tiles.push([[vector[0], vector[1] - 1], null]);
+  tiles.push([[vector[0], vector[1] + 1], null]);
 
   if (diagonals) {
     tiles.push([
-      [ vector[0] - 1, vector[1] - 1 ],
+      [vector[0] - 1, vector[1] - 1],
       [
-        [ vector[0], vector[1] - 1 ],
-        [ vector[0] - 1, vector[1] ],
+        [vector[0], vector[1] - 1],
+        [vector[0] - 1, vector[1]],
       ],
     ]);
     tiles.push([
-      [ vector[0] + 1, vector[1] + 1],
+      [vector[0] + 1, vector[1] + 1],
       [
-        [ vector[0], vector[1] + 1 ],
-        [ vector[0] + 1, vector[1] ],
+        [vector[0], vector[1] + 1],
+        [vector[0] + 1, vector[1]],
       ],
     ]);
     tiles.push([
-      [ vector[0] + 1, vector[1] - 1 ],
+      [vector[0] + 1, vector[1] - 1],
       [
-        [ vector[0], vector[1] - 1 ],
-        [ vector[0] + 1, vector[1] ],
+        [vector[0], vector[1] - 1],
+        [vector[0] + 1, vector[1]],
       ],
     ]);
     tiles.push([
-      [ vector[0] - 1, vector[1] + 1 ],
+      [vector[0] - 1, vector[1] + 1],
       [
-        [ vector[0], vector[1] + 1 ],
-        [ vector[0] - 1, vector[1] ],
+        [vector[0], vector[1] + 1],
+        [vector[0] - 1, vector[1]],
       ],
     ]);
   }
